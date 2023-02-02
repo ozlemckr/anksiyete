@@ -1,0 +1,113 @@
+---
+title: "Untitled"
+output: html_document
+date: '2023-02-02'
+---
+
+
+#Veriyi Çağırma
+```{r}
+library("readr")
+library("dplyr")
+library("ggplot2")
+library("tidyr")
+```
+
+```{r}
+anksiyete_veri<- read.csv("anksiyete_veri.csv", header=TRUE,sep = ";",dec = ",", stringsAsFactors = FALSE)
+
+anksiyete_veri
+```
+
+#Veri yapısı
+```{r}
+glimpse(anksiyete_veri)
+
+```
+```{r}
+summary(anksiyete_veri)
+```
+
+Veri 49 satır 3 sütundan oluşmaktadır. Veri özetinde yaş değişkeni incelendiğinde minimum yaş 22,maksimum yaş 79 ve yaş ortalaması 47'dir.Veri özetinde anksiyete değişkeni incelendiğinde ise minimum anksiyete değerinin 1.9, maksimum anksiyete değerinin 7.8 ve anksiyete ortalamasının 4,10 olduğu gözlemlenmiştir.
+
+#Kadınlarda anksiyete değerini maksimum minimim ve ortalamaya göre inceleme
+```{r}
+anksiyete_veri %>%
+  select(Cinsiyet, Yaş, Anksiyete) %>%
+  filter(Cinsiyet=="Kadın") %>%
+  summarise(Average_Ank= mean(Anksiyete),Min_Ank= min(Anksiyete), Maks_Ank=max(Anksiyete))
+```
+
+Kadınlarda anksiyete değeri incelendiğinde minimum anksiyete değerinin 1.9, maksimum anksiyete değerinin 7.3 ve ortalama anksiyetenin 4.004762 olduğu görülmektedir.
+
+#Erkeklerde anksiyete değerini maksimum, minimim ve ortalamaya göre inceleme
+```{r}
+anksiyete_veri %>%
+  select(Cinsiyet, Yaş, Anksiyete) %>%
+  filter(Cinsiyet=="Erkek") %>%
+  summarise(Average_Ank= mean(Anksiyete),Min_Ank= min(Anksiyete), Maks_Ank=max(Anksiyete))
+```
+
+Erkeklerde anksiyete değeri incelendiğinde minimum anksiyete değerinin 2.2, maksimum anksiyete değerinin 7.8 ve ortalama anksiyetenin 4.507143 olduğu görülmektedir.
+
+#Yaşları 30'dan küçük olan değişkenlerin maksimum, minimum ve ortalamasını inceleme
+```{r}
+anksiyete_veri %>%
+  select(Cinsiyet, Yaş, Anksiyete) %>%
+  filter(Yaş<30) %>%
+  summarise(Average_Ank= mean(Anksiyete),Min_Ank= min(Anksiyete), Maks_Ank=max(Anksiyete))
+```
+
+Yaşı 30'dan küçük olan erkeklerin ve kadınların arasında minimum anksiyeteye sahip olan kişinin anksiyete değeri 2, maksimum anksiyete değeri 4.1 ve ortalama anksiyete değeri ise 3.028571'dir.
+
+#Yaşları 30'dan büyük olan değişkenlerin maksimum, minimum ve ortalamasını inceleme
+```{r}
+anksiyete_veri %>%
+  select(Cinsiyet, Yaş, Anksiyete) %>%
+  filter(Yaş>30) %>%
+  summarise(Average_Ank= mean(Anksiyete),Min_Ank= min(Anksiyete), Maks_Ank=max(Anksiyete))
+```
+
+Yaşı 30'dan küçük olan erkeklerin ve kadınların arasında minimum anksiyeteye sahip olan kişinin anksiyete değeri 1.9, maksimum anksiyete değeri 7.8 ve ortalama anksiyete değeri ise 4.54878'dir.
+
+#Yaşları 30'dan küçük erkeklerin minimum, maksimum ve ortalama anksiyete değerini inceleme
+```{r}
+anksiyete_veri %>%
+  select(Cinsiyet, Yaş, Anksiyete) %>%
+  filter(Yaş<30 | Cinsiyet=="Erkek") %>%
+  summarise(Average_Ank= mean(Anksiyete),Min_Ank= min(Anksiyete), Maks_Ank=max(Anksiyete))
+```
+
+Yaşları 30'dan küçük olan erkeklerin anksiyete değerleri incelendiğinde minimum anksiyeteye sahip kişinin anksiyete değeri 2, maksimum anksiyete sahip kişinin anksiyete değeri 7.8 iken ortalama anksiyete değeri 4.265625'dir.
+
+#Yaşları 30'dan büyük erkeklerin minimum, maksimum ve ortalama anksiyete değerini inceleme
+```{r}
+anksiyete_veri %>%
+  select(Cinsiyet, Yaş, Anksiyete) %>%
+  filter(Yaş>30 | Cinsiyet=="Erkek") %>%
+  summarise(Average_Ank= mean(Anksiyete),Min_Ank= min(Anksiyete), Maks_Ank=max(Anksiyete))
+```
+
+Yaşları 30'dan büyük erkeklerin anksiyete değerleri incelendiğinde minimum anksiyeteye sahip kişinin anksiyete değeri 1.9, maksimum anksiyete sahip kişinin anksiyete değeri 7.8 iken ortalama anksiyete değeri 4.486364'dir
+
+Yaşları 30'dan büyük ve 30'dan küçük erkeklerin anksiyetesi karşılaştırıldığında;bunlar arasında minimum değer 1.9, maksimum değer 7.8'dir. Ortalama anksiyete değerleri karşılaştırıldığında anksiyete değeri 4.486364 değeriyle 30 yaşından büyük olan erkeklerin ortalama anskiyetesinin daha büyük olduğu görülür.
+
+#Anksiyete değerinin 3 ve 3'e yakın değerlerinin sayısını kadın ve erkek değişkenlerine göre bulma
+```{r}
+anksiyete_veri %>%
+  select(Cinsiyet, Yaş, Anksiyete) %>%
+  filter(near(Anksiyete,3, tol=0.5)) %>%
+  group_by(Cinsiyet) %>%
+  count()
+```
+
+Anksiyete değişkeninin 3 ve 3'e yakın değelerinin sayısı kadın ve erkeklere göre bakıldığında erkeklerde bu sayının 7 ve kadınlarda bu sayının 6 olduğu gözlenir.
+
+#Anksiyete değerine cinsiyet değişkenine göre grafikte bakılması
+
+```{r}
+ggplot(anksiyete_veri, aes(x = Anksiyete, fill = Cinsiyet)) +
+  geom_bar(position = "dodge") +
+  theme(axis.text.x = element_text(angle = 8))
+```
+Anskiyete değeri için grafiğe bakıldığında erkeklerin kadınlara göre anksiyetesi karşılaştırıldığında en yüksek anksiyete değerinin erkeklerde olduğu görülmektedir ve en düşük anksiyete değerinin ise kadınlarda olduğu gözlenmektedir.
